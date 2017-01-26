@@ -35,11 +35,13 @@
             this.lblFormTitle = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.btnOpen3 = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
+            this.btnOpenX = new DevExpress.XtraEditors.SimpleButton();
             this.SuspendLayout();
             // 
             // btnOpen1
             // 
-            this.btnOpen1.Location = new System.Drawing.Point(255, 69);
+            this.btnOpen1.Location = new System.Drawing.Point(255, 245);
             this.btnOpen1.Name = "btnOpen1";
             this.btnOpen1.Size = new System.Drawing.Size(170, 40);
             this.btnOpen1.TabIndex = 0;
@@ -49,7 +51,7 @@
             // labelControl1
             // 
             this.labelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
-            this.labelControl1.Location = new System.Drawing.Point(12, 81);
+            this.labelControl1.Location = new System.Drawing.Point(12, 257);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Size = new System.Drawing.Size(219, 13);
             this.labelControl1.TabIndex = 1;
@@ -58,7 +60,7 @@
             // labelControl2
             // 
             this.labelControl2.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
-            this.labelControl2.Location = new System.Drawing.Point(12, 125);
+            this.labelControl2.Location = new System.Drawing.Point(12, 199);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(219, 39);
             this.labelControl2.TabIndex = 3;
@@ -67,7 +69,7 @@
             // 
             // btnOpen2
             // 
-            this.btnOpen2.Location = new System.Drawing.Point(255, 125);
+            this.btnOpen2.Location = new System.Drawing.Point(255, 199);
             this.btnOpen2.Name = "btnOpen2";
             this.btnOpen2.Size = new System.Drawing.Size(170, 40);
             this.btnOpen2.TabIndex = 2;
@@ -87,7 +89,7 @@
             // labelControl3
             // 
             this.labelControl3.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
-            this.labelControl3.Location = new System.Drawing.Point(12, 187);
+            this.labelControl3.Location = new System.Drawing.Point(12, 159);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(219, 26);
             this.labelControl3.TabIndex = 6;
@@ -95,18 +97,38 @@
             // 
             // btnOpen3
             // 
-            this.btnOpen3.Location = new System.Drawing.Point(255, 181);
+            this.btnOpen3.Location = new System.Drawing.Point(255, 153);
             this.btnOpen3.Name = "btnOpen3";
             this.btnOpen3.Size = new System.Drawing.Size(170, 40);
             this.btnOpen3.TabIndex = 5;
             this.btnOpen3.Text = "Abrir";
             this.btnOpen3.Click += new System.EventHandler(this.btnOpen3_Click);
             // 
+            // labelControl4
+            // 
+            this.labelControl4.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
+            this.labelControl4.Location = new System.Drawing.Point(12, 68);
+            this.labelControl4.Name = "labelControl4";
+            this.labelControl4.Size = new System.Drawing.Size(219, 26);
+            this.labelControl4.TabIndex = 8;
+            this.labelControl4.Text = "Advance example, traying to acomplish the final result.";
+            // 
+            // btnOpenX
+            // 
+            this.btnOpenX.Location = new System.Drawing.Point(255, 62);
+            this.btnOpenX.Name = "btnOpenX";
+            this.btnOpenX.Size = new System.Drawing.Size(170, 40);
+            this.btnOpenX.TabIndex = 7;
+            this.btnOpenX.Text = "Abrir";
+            this.btnOpenX.Click += new System.EventHandler(this.btnOpenX_Click);
+            // 
             // frmStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(437, 297);
+            this.Controls.Add(this.labelControl4);
+            this.Controls.Add(this.btnOpenX);
             this.Controls.Add(this.labelControl3);
             this.Controls.Add(this.btnOpen3);
             this.Controls.Add(this.lblFormTitle);
@@ -130,5 +152,7 @@
         private DevExpress.XtraEditors.LabelControl lblFormTitle;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.SimpleButton btnOpen3;
+        private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.SimpleButton btnOpenX;
     }
 }

@@ -11,7 +11,6 @@ namespace winFormsXtraTreeList
 {
     public partial class frmTreeListColumns : Form
     {
-
         Bitmap image = null;
 
         public frmTreeListColumns()

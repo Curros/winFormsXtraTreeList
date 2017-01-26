@@ -34,5 +34,11 @@ namespace winFormsXtraTreeList
             frmTreeListColumns form = new frmTreeListColumns();
             form.Show();
         }
+
+        private void btnOpenX_Click(object sender, EventArgs e)
+        {
+            frmTreeListX form = new frmTreeListX();
+            form.Show();
+        }
     }
 }
