@@ -36,21 +36,21 @@ namespace winFormsXtraTreeList
 
             #endregion
 
-            LoadNodes();
+            LoadNodes(treeList1);
         }
 
-        private void LoadNodes()
+        private void LoadNodes(TreeList treeList)
         {
             //Parents
-            TreeListNode codeNode = treeList1.AppendNode(null, null);
+            TreeListNode codeNode = treeList.AppendNode(null, null);
             codeNode.SetValue("Name", "Group");
             codeNode.SetValue("Style", null);
 
-            TreeListNode docsNode = treeList1.AppendNode(null, null);
+            TreeListNode docsNode = treeList.AppendNode(null, null);
             docsNode.SetValue("Name", "Documents");
             docsNode.SetValue("Style", null);
 
-            TreeListNode videosNode = treeList1.AppendNode(null, null);
+            TreeListNode videosNode = treeList.AppendNode(null, null);
             videosNode.SetValue("Name", "Videos");
             videosNode.SetValue("Style", null);
 
@@ -58,12 +58,12 @@ namespace winFormsXtraTreeList
             //Code
             TreeListNode childNode = null;
 
-            childNode = treeList1.AppendNode(null, codeNode);
+            childNode = treeList.AppendNode(null, codeNode);
             childNode.SetValue(colName, "Layer with Styles");
             childNode.SetValue(colID, "1");
 
             TreeListNode childNode2 = null;
-            childNode2 = treeList1.AppendNode(null, childNode);
+            childNode2 = treeList.AppendNode(null, childNode);
             childNode2.SetValue(colName, "Style layer");
             childNode2.SetValue(colID, "1a");
             childNode2.SetValue(colStyle, image);     //Adding Image (Be careful with selector.)
@@ -72,30 +72,30 @@ namespace winFormsXtraTreeList
             codeNode.Checked = true;
             childNode.Expanded = true;   //Better do after the Children are added.
 
-            childNode = treeList1.AppendNode(null, codeNode);
+            childNode = treeList.AppendNode(null, codeNode);
             childNode.SetValue("Name", "Layer Loading");
             childNode.SetValue(colID, "2");
             childNode.SetValue(colStyle, Properties.Resources.loading);     //Adding Image (Be careful with selector.)
 
             //Docs
-            childNode = treeList1.AppendNode(null, docsNode);
+            childNode = treeList.AppendNode(null, docsNode);
             childNode.SetValue("Name", "Data layer");
             childNode.SetValue("Style", null);
 
-            childNode = treeList1.AppendNode(null, docsNode);
+            childNode = treeList.AppendNode(null, docsNode);
             childNode.SetValue("Name", "Another data layer");
             childNode.SetValue("Style", null);
 
             //Video
-            childNode = treeList1.AppendNode(null, videosNode);
+            childNode = treeList.AppendNode(null, videosNode);
             childNode.SetValue("Name", "Data layer");
             childNode.SetValue("Style", null);
 
-            childNode = treeList1.AppendNode(null, videosNode);
+            childNode = treeList.AppendNode(null, videosNode);
             childNode.SetValue("Name", "Another data layer");
             childNode.SetValue("Style", null);
 
-            childNode = treeList1.AppendNode(null, videosNode);
+            childNode = treeList.AppendNode(null, videosNode);
             childNode.SetValue("Name", "Another another data layer");
             childNode.SetValue("Style", null);
         }
@@ -129,9 +129,22 @@ namespace winFormsXtraTreeList
                 if (hitInfo.HitInfoType == HitInfoType.Cell)
                 {
                     treeList1.FocusedNode = hitInfo.Node;   //Mark as selected the clicked node.
-                    popupMenu.ShowPopup(Cursor.Position);   //Open the popupMenu, if a node is clicked.
+                    popTreeLayer.ShowPopup(Cursor.Position);   //Open the popupMenu, if a node is clicked.
                 }
+
+                switch (hitInfo.HitInfoType)
+                {
+                    case HitInfoType.Cell:
+                        treeList1.FocusedNode = hitInfo.Node;       //Mark as selected the clicked node.
+                        popTreeLayer.ShowPopup(Cursor.Position);    //Open the popupMenu, if a node is clicked.
+                        break;
+                    case HitInfoType.Empty:
+                        popTreeEmpty.ShowPopup(Cursor.Position);
+                        break;
+                }
+
             }
+
         }
 
         /// <summary>
@@ -171,12 +184,7 @@ namespace winFormsXtraTreeList
         private void barBtnDeleteNode_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (treeList1.AllNodesCount == 0) return;
-            treeList1.LockReloadNodes();
-            try
-            {
-                DeleteSelectedNodes(treeList1);
-            }
-            finally { treeList1.UnlockReloadNodes(); }
+            DeleteSelectedNodes(treeList1);
         }
 
         #endregion
@@ -184,16 +192,50 @@ namespace winFormsXtraTreeList
         #region Private Functionalities
 
         /// <summary>
-        /// Delete all the selected nodes and his childs.
+        /// Delete all the selected nodes (and his children).
         /// </summary>
         /// <param name="treeList"></param>
         private void DeleteSelectedNodes(TreeList treeList)
         {
-            treeList.DeleteSelectedNodes();
+            treeList1.LockReloadNodes();
+            try
+            {
+                treeList.DeleteSelectedNodes();
+            }
+            finally
+            {
+                treeList1.UnlockReloadNodes();
+            }
+        }
+
+        private void DeleteAllNodes(TreeList treeList)
+        {
+            var tmpConfig = treeList.OptionsSelection.MultiSelect;
+            treeList1.LockReloadNodes();
+            try
+            {
+                treeList.OptionsSelection.MultiSelect = true;
+                treeList.SelectAll();
+                treeList.DeleteSelectedNodes();
+            }
+            finally
+            {
+                treeList.OptionsSelection.MultiSelect = tmpConfig;
+                treeList1.UnlockReloadNodes();
+            }
         }
 
         #endregion
 
+        private void barBtnDeleteAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            DeleteAllNodes(treeList1);
+        }
 
+        private void barBtnReloadNodes_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            DeleteAllNodes(treeList1);
+            LoadNodes(treeList1);
+        }
     }
 }

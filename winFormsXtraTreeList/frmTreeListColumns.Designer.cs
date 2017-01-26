@@ -36,7 +36,7 @@
             this.colStyle = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.repositoryItemPictureEdit = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
             this.imageCollection = new DevExpress.Utils.ImageCollection(this.components);
-            this.popupMenu = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.popTreeLayer = new DevExpress.XtraBars.PopupMenu(this.components);
             this.barBtnRowInfo = new DevExpress.XtraBars.BarButtonItem();
             this.barManager = new DevExpress.XtraBars.BarManager(this.components);
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -46,12 +46,16 @@
             this.pictureEdit = new DevExpress.XtraEditors.PictureEdit();
             this.lblTest = new DevExpress.XtraEditors.LabelControl();
             this.barBtnDeleteNode = new DevExpress.XtraBars.BarButtonItem();
+            this.popTreeEmpty = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.barBtnDeleteAll = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnReloadNodes = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupMenu)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popTreeLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popTreeEmpty)).BeginInit();
             this.SuspendLayout();
             // 
             // treeList1
@@ -134,13 +138,13 @@
             this.imageCollection.InsertImage(global::winFormsXtraTreeList.Properties.Resources.loading, "loading", typeof(global::winFormsXtraTreeList.Properties.Resources), 0);
             this.imageCollection.Images.SetKeyName(0, "loading");
             // 
-            // popupMenu
+            // popTreeLayer
             // 
-            this.popupMenu.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            this.popTreeLayer.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.barBtnRowInfo, DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph),
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.barBtnDeleteNode, DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph)});
-            this.popupMenu.Manager = this.barManager;
-            this.popupMenu.Name = "popupMenu";
+            this.popTreeLayer.Manager = this.barManager;
+            this.popTreeLayer.Name = "popTreeLayer";
             // 
             // barBtnRowInfo
             // 
@@ -163,8 +167,10 @@
             this.barManager.Form = this;
             this.barManager.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.barBtnRowInfo,
-            this.barBtnDeleteNode});
-            this.barManager.MaxItemId = 2;
+            this.barBtnDeleteNode,
+            this.barBtnDeleteAll,
+            this.barBtnReloadNodes});
+            this.barManager.MaxItemId = 4;
             // 
             // barDockControlTop
             // 
@@ -233,6 +239,32 @@
             this.barBtnDeleteNode.Name = "barBtnDeleteNode";
             this.barBtnDeleteNode.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnDeleteNode_ItemClick);
             // 
+            // popTreeEmpty
+            // 
+            this.popTreeEmpty.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnDeleteAll),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barBtnReloadNodes)});
+            this.popTreeEmpty.Manager = this.barManager;
+            this.popTreeEmpty.Name = "popTreeEmpty";
+            // 
+            // barBtnDeleteAll
+            // 
+            this.barBtnDeleteAll.Caption = "Delete All Nodes";
+            this.barBtnDeleteAll.Id = 2;
+            this.barBtnDeleteAll.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barBtnDeleteGroup.ImageOptions.Image")));
+            this.barBtnDeleteAll.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barBtnDeleteGroup.ImageOptions.LargeImage")));
+            this.barBtnDeleteAll.Name = "barBtnDeleteAll";
+            this.barBtnDeleteAll.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnDeleteAll_ItemClick);
+            // 
+            // barBtnReloadNodes
+            // 
+            this.barBtnReloadNodes.Caption = "Reload Nodes";
+            this.barBtnReloadNodes.Id = 3;
+            this.barBtnReloadNodes.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barBtnReloadNodes.ImageOptions.Image")));
+            this.barBtnReloadNodes.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barBtnReloadNodes.ImageOptions.LargeImage")));
+            this.barBtnReloadNodes.Name = "barBtnReloadNodes";
+            this.barBtnReloadNodes.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnReloadNodes_ItemClick);
+            // 
             // frmTreeListColumns
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -251,9 +283,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupMenu)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popTreeLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popTreeEmpty)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -263,7 +296,7 @@
 
         private DevExpress.XtraTreeList.TreeList treeList1;
         private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
-        private DevExpress.XtraBars.PopupMenu popupMenu;
+        private DevExpress.XtraBars.PopupMenu popTreeLayer;
         private DevExpress.XtraBars.BarButtonItem barBtnRowInfo;
         private DevExpress.XtraBars.BarManager barManager;
         private DevExpress.XtraBars.BarDockControl barDockControlTop;
@@ -277,5 +310,8 @@
         private DevExpress.XtraEditors.LabelControl lblTest;
         private DevExpress.Utils.ImageCollection imageCollection;
         private DevExpress.XtraBars.BarButtonItem barBtnDeleteNode;
+        private DevExpress.XtraBars.PopupMenu popTreeEmpty;
+        private DevExpress.XtraBars.BarButtonItem barBtnDeleteAll;
+        private DevExpress.XtraBars.BarButtonItem barBtnReloadNodes;
     }
 }
