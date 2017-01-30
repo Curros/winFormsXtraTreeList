@@ -20,26 +20,59 @@ namespace winFormsXtraTreeList.Models
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Notifica el cambio de propiedades
+        /// Fire change in properties event if connected.
         /// </summary>
         /// <param name="propertyName"></param>
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private void OnPropertyChanged([CallerMemberName] String propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Used to bypass all the changes in properties.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value))
+                return false; //Check if the value is the same, dont fire the event.
+
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
         #endregion
 
-        public int ID { get; set; }
-
-        public string Name { get; set; }
+        private int _id;
+        private string _name;
+        private NodeType? _type = null;
         
-        public NodeType? Type { get; set; } = null;
-
         /// <summary>
         /// List of children.
         /// </summary>
         private IList<NodeData> _children = new List<NodeData>();
+
+
+        public int ID {
+            get { return _id; }
+            set { SetField(ref _id, value); }
+        }
+        
+        public string Name {
+            get { return _name; }
+            set { SetField(ref _name, value); }
+        }
+        
+        public NodeType? Type
+        {
+            get { return _type; }
+            set { SetField(ref _type, value); }
+        }
 
         #region [ Constructor ]
 
@@ -75,12 +108,24 @@ namespace winFormsXtraTreeList.Models
         {
             get
             {
-                throw new NotImplementedException();
+                if (Count > 0)
+                    return _children[index];
+                return null;
             }
-
             set
             {
-                throw new NotImplementedException();
+                _children[index] = value;
+            }
+        }
+
+        public NodeData this[string name]
+        {
+            get
+            {
+                if (Count > 0)
+                    return _children.FirstOrDefault(chld => chld.Name == name);
+
+                return null;
             }
         }
 
@@ -102,16 +147,19 @@ namespace winFormsXtraTreeList.Models
         public void Add(NodeData item)
         {
             _children.Add(item);
+            OnPropertyChanged("AddChildren");
         }
 
         public void Add(NodeData item, int Parent)
         {
             _children.First(chld => chld.ID == Parent).Add(item);
+            OnPropertyChanged("AddChildren");
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _children.Clear();
+            OnPropertyChanged("ClearChildren");
         }
 
         public bool Contains(NodeData item)
@@ -171,7 +219,6 @@ namespace winFormsXtraTreeList.Models
                 if (val != info.OldCellData)
                 {
                     property.SetValue(this, val, null);
-                    NotifyPropertyChanged(info.NewCellData.ToString());
                 }
             }
         }

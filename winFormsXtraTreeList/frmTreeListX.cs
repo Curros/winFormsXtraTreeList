@@ -17,10 +17,10 @@ namespace winFormsXtraTreeList
 
         private void frmTreeListX_Load(object sender, EventArgs e)
         {
-            _treeListNodes.Add(new NodeData(1, "test", NodeType.LAYER));
-            _treeListNodes.Add(new NodeData(2, "secondTest", NodeType.GROUP));
+            _treeListNodes.Add(new NodeData(1, "type Layer", NodeType.LAYER));
+            _treeListNodes.Add(new NodeData(2, "secondTest Group", NodeType.GROUP));
 
-            _treeListNodes.Add(new NodeData(3, "secondTest", NodeType.GROUP),1);
+            _treeListNodes.Add(new NodeData(3, "secondTest Group", NodeType.GROUP),1);
 
             LoadNodes(treeList);
         }
@@ -51,7 +51,12 @@ namespace winFormsXtraTreeList
                 {
                     case HitInfoType.Cell:
                         _treeList.FocusedNode = hitInfo.Node;       //Mark as selected the clicked node.
-                        popTreeLayer.ShowPopup(Cursor.Position);    //Open the popupMenu, if a node is clicked.
+
+                        var nodeType = _treeListNodes[_treeList.FocusedNode[_treeList.Columns.ColumnByFieldName("Name")?.AbsoluteIndex]?.ToString()]?.Type;
+                        
+                        if(nodeType == NodeType.LAYER)
+                            popTreeLayer.ShowPopup(Cursor.Position);    //Open the popupMenu, if a node layer is clicked.
+
                         break;
                     case HitInfoType.Empty:
                         popTreeEmpty.ShowPopup(Cursor.Position);
@@ -109,39 +114,16 @@ namespace winFormsXtraTreeList
         /// <param name="treeList"></param>
         private void DeleteSelectedNodes(TreeList treeList)
         {
-            this.treeList.LockReloadNodes();
-            try
-            {
-                treeList.DeleteSelectedNodes();
-            }
-            finally
-            {
-                this.treeList.UnlockReloadNodes();
-            }
         }
 
         private void DeleteAllNodes(TreeList treeList)
         {
-            var tmpConfig = treeList.OptionsSelection.MultiSelect;
-            this.treeList.LockReloadNodes();
-            try
-            {
-                treeList.OptionsSelection.MultiSelect = true;
-                treeList.SelectAll();
-                treeList.DeleteSelectedNodes();
-            }
-            finally
-            {
-                treeList.OptionsSelection.MultiSelect = tmpConfig;
-                this.treeList.UnlockReloadNodes();
-            }
         }
 
         #endregion
 
         private void barBtnDeleteAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DeleteAllNodes(treeList);
         }
 
         private void barBtnReloadNodes_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -161,11 +143,6 @@ namespace winFormsXtraTreeList
                 e.Valid = false;
                 //throw;
             }
-        }
-
-        private void treeList_Click(object sender, EventArgs e)
-        {
-            var x = e;
         }
     }
 }
