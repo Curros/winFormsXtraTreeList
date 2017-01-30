@@ -48,37 +48,43 @@ namespace winFormsXtraTreeList.Models
 
         #endregion
 
+        #region [ NodeData Properties ]
+
         private int _id;
         private string _name;
-        private NodeType? _type = null;
-        
+        private TreeListConstants.NodeType? _type = null;
+
         /// <summary>
         /// List of children.
         /// </summary>
         private IList<NodeData> _children = new List<NodeData>();
 
 
-        public int ID {
+        public int ID
+        {
             get { return _id; }
             set { SetField(ref _id, value); }
         }
-        
-        public string Name {
+
+        public string Name
+        {
             get { return _name; }
             set { SetField(ref _name, value); }
         }
-        
-        public NodeType? Type
+
+        public TreeListConstants.NodeType? Type
         {
             get { return _type; }
             set { SetField(ref _type, value); }
         }
 
+        #endregion [ NodeData Properties ]
+
         #region [ Constructor ]
 
-        public NodeData() : this(0,"rootNode", NodeType.ROOT) {}
+        public NodeData() : this(0,"rootNode", TreeListConstants.NodeType.ROOT) {}
 
-        public NodeData(int _nodeID, string _name, NodeType? _nodeType)
+        public NodeData(int _nodeID, string _name, TreeListConstants.NodeType? _nodeType)
         {
             ID = _nodeID;
             Name = _name;
@@ -147,19 +153,19 @@ namespace winFormsXtraTreeList.Models
         public void Add(NodeData item)
         {
             _children.Add(item);
-            OnPropertyChanged("AddChildren");
+            OnPropertyChanged( TreeListConstants.PROPERTY_ADD_CHILD );
         }
 
         public void Add(NodeData item, int Parent)
         {
             _children.First(chld => chld.ID == Parent).Add(item);
-            OnPropertyChanged("AddChildren");
+            OnPropertyChanged(TreeListConstants.PROPERTY_ADD_CHILD);
         }
 
         public void Clear()
         {
             _children.Clear();
-            OnPropertyChanged("ClearChildren");
+            OnPropertyChanged(TreeListConstants.PROPERTY_CLEAR_CHILDREN);
         }
 
         public bool Contains(NodeData item)
@@ -235,18 +241,4 @@ namespace winFormsXtraTreeList.Models
         #endregion [ IDisposable ]
 
     }
-
-
-
-    /// <summary>
-    /// Different node types.
-    /// </summary>
-    enum NodeType
-    {
-        ROOT,
-        GROUP,
-        LAYER,
-        STYLE
-    }
-
 }

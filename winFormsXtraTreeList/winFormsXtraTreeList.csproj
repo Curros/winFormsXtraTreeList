@@ -83,6 +83,7 @@
     <Compile Include="frmTreeListX.Designer.cs">
       <DependentUpon>frmTreeListX.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\TreeListConstants.cs" />
     <Compile Include="Models\TreeListLayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
