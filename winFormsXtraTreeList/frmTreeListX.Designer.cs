@@ -70,10 +70,9 @@
             this.colName,
             this.colID,
             this.colStyle});
-            this.treeList.Cursor = System.Windows.Forms.Cursors.Default;
+            this.treeList.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.treeList.Location = new System.Drawing.Point(12, 12);
             this.treeList.Name = "treeList";
-            this.treeList.OptionsBehavior.Editable = false;
             this.treeList.OptionsDragAndDrop.DragNodesMode = DevExpress.XtraTreeList.DragNodesMode.Single;
             this.treeList.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.treeList.OptionsView.AnimationType = DevExpress.XtraTreeList.TreeListAnimationType.AnimateAllContent;
@@ -85,7 +84,9 @@
             this.treeList.Size = new System.Drawing.Size(277, 498);
             this.treeList.TabIndex = 2;
             this.treeList.AfterCheckNode += new DevExpress.XtraTreeList.NodeEventHandler(this.treeList1_AfterCheckNode);
+            this.treeList.ValidatingEditor += new DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventHandler(this.treeList_ValidatingEditor);
             this.treeList.CustomDrawNodeCheckBox += new DevExpress.XtraTreeList.CustomDrawNodeCheckBoxEventHandler(this.treeList1_CustomDrawNodeCheckBox);
+            this.treeList.Click += new System.EventHandler(this.treeList_Click);
             this.treeList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeList_MouseUp);
             // 
             // colName
@@ -94,6 +95,7 @@
             this.colName.FieldName = "Name";
             this.colName.MinWidth = 34;
             this.colName.Name = "colName";
+            this.colName.OptionsColumn.AllowSort = false;
             this.colName.Visible = true;
             this.colName.VisibleIndex = 0;
             this.colName.Width = 380;
@@ -104,10 +106,12 @@
             this.colID.FieldName = "ID";
             this.colID.Fixed = DevExpress.XtraTreeList.Columns.FixedStyle.Right;
             this.colID.Name = "colID";
+            this.colID.OptionsColumn.AllowEdit = false;
+            this.colID.OptionsColumn.AllowSort = false;
             this.colID.OptionsColumn.FixedWidth = true;
             this.colID.Visible = true;
             this.colID.VisibleIndex = 1;
-            this.colID.Width = 20;
+            this.colID.Width = 30;
             // 
             // colStyle
             // 
@@ -117,6 +121,8 @@
             this.colStyle.Fixed = DevExpress.XtraTreeList.Columns.FixedStyle.Right;
             this.colStyle.Name = "colStyle";
             this.colStyle.OptionsColumn.AllowEdit = false;
+            this.colStyle.OptionsColumn.AllowMove = false;
+            this.colStyle.OptionsColumn.AllowSort = false;
             this.colStyle.OptionsColumn.FixedWidth = true;
             this.colStyle.ToolTip = "Shows some styles.";
             this.colStyle.Visible = true;

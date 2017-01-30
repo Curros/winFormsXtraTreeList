@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraTreeList;
+using winFormsXtraTreeList.Models;
 
 namespace winFormsXtraTreeList
 {
     public partial class frmTreeListX : Form
     {
+        NodeData _treeListNodes = new NodeData();
+
         public frmTreeListX()
         {
             InitializeComponent();
@@ -21,7 +17,19 @@ namespace winFormsXtraTreeList
 
         private void frmTreeListX_Load(object sender, EventArgs e)
         {
+            _treeListNodes.Add(new NodeData(1, "test", NodeType.LAYER));
+            _treeListNodes.Add(new NodeData(2, "secondTest", NodeType.GROUP));
 
+            _treeListNodes.Add(new NodeData(3, "secondTest", NodeType.GROUP),1);
+
+            LoadNodes(treeList);
+        }
+
+        private void LoadNodes(TreeList _treeList)
+        {
+            _treeList.BeginUpdate();
+            _treeList.DataSource = _treeListNodes;
+            _treeList.EndUpdate();
         }
 
 
@@ -34,23 +42,22 @@ namespace winFormsXtraTreeList
         /// <param name="e"></param>
         private void treeList_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            TreeList _treeList = (sender as TreeList);
+            if (e.Button == MouseButtons.Right && _treeList != null)
             {
-                // Check if a node's indicator cell is clicked.
-                TreeListHitInfo hitInfo = (sender as TreeList)?.CalcHitInfo(e.Location);
+                // Check indicator clicked.
+                TreeListHitInfo hitInfo = _treeList.CalcHitInfo(e.Location);
                 switch (hitInfo?.HitInfoType)
                 {
                     case HitInfoType.Cell:
-                        treeList.FocusedNode = hitInfo.Node;       //Mark as selected the clicked node.
+                        _treeList.FocusedNode = hitInfo.Node;       //Mark as selected the clicked node.
                         popTreeLayer.ShowPopup(Cursor.Position);    //Open the popupMenu, if a node is clicked.
                         break;
                     case HitInfoType.Empty:
                         popTreeEmpty.ShowPopup(Cursor.Position);
                         break;
                 }
-
             }
-
         }
 
         /// <summary>
@@ -142,6 +149,23 @@ namespace winFormsXtraTreeList
 
         }
 
+        private void treeList_ValidatingEditor(object sender, DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs e)
+        {
+            TreeList trList = (TreeList)sender;
+            try
+            {
+                var tmp = Convert.ChangeType(e.Value, trList.FocusedNode[trList.FocusedColumn].GetType());
+            }
+            catch
+            {
+                e.Valid = false;
+                //throw;
+            }
+        }
 
+        private void treeList_Click(object sender, EventArgs e)
+        {
+            var x = e;
+        }
     }
 }
