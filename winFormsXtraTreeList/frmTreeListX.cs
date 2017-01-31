@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraTreeList;
+using DevExpress.XtraTreeList.Nodes;
 using winFormsXtraTreeList.Models;
 
 namespace winFormsXtraTreeList
@@ -17,10 +19,9 @@ namespace winFormsXtraTreeList
 
         private void frmTreeListX_Load(object sender, EventArgs e)
         {
-            _treeListNodes.Add(new NodeData(1, "type Layer", NodeType.LAYER));
-            _treeListNodes.Add(new NodeData(2, "secondTest Group", NodeType.GROUP));
-
-            _treeListNodes.Add(new NodeData(3, "secondTest Group", NodeType.GROUP),1);
+            _treeListNodes.Add(new NodeData(1, "type Layer", TreeListConstants.NodeType.LAYER));
+            _treeListNodes.Add(new NodeData(2, "secondTest Group", TreeListConstants.NodeType.GROUP));
+            _treeListNodes.Add(new NodeData(3, "secondTest Group", TreeListConstants.NodeType.STYLE),1);
 
             LoadNodes(treeList);
         }
@@ -30,13 +31,17 @@ namespace winFormsXtraTreeList
             _treeList.BeginUpdate();
             _treeList.DataSource = _treeListNodes;
             _treeList.EndUpdate();
+            _treeList.UnlockReloadNodes();
+            _treeList.ForceInitialize();
+            _treeList.ExpandAll();
+
+            LoadCheckedNodes(treeList.Nodes);
         }
 
-
-        #region TreeList Events
+        #region [ TreeList Events ]
 
         /// <summary>
-        /// Occurs after the PopupMenu
+        /// Actions to perform, used for the popUpMenus.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -52,9 +57,8 @@ namespace winFormsXtraTreeList
                     case HitInfoType.Cell:
                         _treeList.FocusedNode = hitInfo.Node;       //Mark as selected the clicked node.
 
-                        var nodeType = _treeListNodes[_treeList.FocusedNode[_treeList.Columns.ColumnByFieldName("Name")?.AbsoluteIndex]?.ToString()]?.Type;
-                        
-                        if(nodeType == NodeType.LAYER)
+                        var nodeType = _treeListNodes[_treeList.FocusedNode.GetValue("Name").ToString()]?.Type;
+                        if(nodeType == TreeListConstants.NodeType.LAYER)
                             popTreeLayer.ShowPopup(Cursor.Position);    //Open the popupMenu, if a node layer is clicked.
 
                         break;
@@ -66,13 +70,16 @@ namespace winFormsXtraTreeList
         }
 
         /// <summary>
-        /// 
+        /// Method to change/set the checked state of the node.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void treeList1_AfterCheckNode(object sender, NodeEventArgs e)
         {
-            treeList.FocusedNode = e.Node;     //Auto focus after checked
+            TreeList _treeList = (sender as TreeList);
+            _treeList.FocusedNode = e.Node;             //Auto focus after check
+            var tmpNode = _treeListNodes[_treeList.FocusedNode.GetValue("Name").ToString()];
+            tmpNode.IsChecked = _treeList.FocusedNode.Checked;
         }
 
         /// <summary>
@@ -82,12 +89,31 @@ namespace winFormsXtraTreeList
         /// <param name="e"></param>
         private void treeList1_CustomDrawNodeCheckBox(object sender, CustomDrawNodeCheckBoxEventArgs e)
         {
+            var _treeList = (TreeList)sender;
 
+            //Check type of node to Hide
+            TreeListConstants.NodeType? _nodeType = _treeListNodes[e.Node.GetValue("Name")?.ToString()]?.Type;
+            if (_treeList != null &&
+                _nodeType != TreeListConstants.NodeType.LAYER &&
+                _nodeType != TreeListConstants.NodeType.GROUP)
+            {
+                HideCheckBoxTreeList(_treeList, e);
+            }
         }
 
-        #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeList_AfterExpand(object sender, NodeEventArgs e)
+        {
+            LoadCheckedNodes(e.Node.Nodes);  //Set childs.
+        }
 
-        #region Popup Events
+        #endregion [ TreeList Events ]
+
+        #region [ Popup Events ]
 
         /// <summary>
         /// 
@@ -104,9 +130,18 @@ namespace winFormsXtraTreeList
 
         }
 
-        #endregion
+        private void barBtnDeleteAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+        }
 
-        #region Private Functionalities
+        private void barBtnReloadNodes_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+
+        }
+
+        #endregion [ Popup Events ]
+
+        #region [ Private Functionalities ]
 
         /// <summary>
         /// Delete all the selected nodes (and his children).
@@ -120,15 +155,44 @@ namespace winFormsXtraTreeList
         {
         }
 
-        #endregion
-
-        private void barBtnDeleteAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        /// <summary>
+        /// Establish the check property of the node, using the model.
+        /// </summary>
+        /// <param name="_nodes"></param>
+        private void LoadCheckedNodes(TreeListNodes _nodes)
         {
+            if (_nodes.Count < 1) { return; }
+
+            foreach (TreeListNode _node in _nodes)
+            {
+                var tmpNode = _treeListNodes[_node.GetValue("Name")?.ToString()];
+                _node.Checked = tmpNode?.IsChecked ?? false;
+
+                //If not expanded, the _node.Nodes.Count is 0
+                if (_node.HasChildren && _node.Expanded)
+                    LoadCheckedNodes(_node.Nodes);
+            }
         }
 
-        private void barBtnReloadNodes_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        /// <summary>
+        /// ReDraw on white the checkBox if you don't want to show it.
+        /// </summary>
+        /// <param name="_treeList"></param>
+        private void HideCheckBoxTreeList(TreeList _treeList, CustomDrawNodeCheckBoxEventArgs e)
         {
-
+            DevExpress.XtraTreeList.ViewInfo.IndentInfo ii = _treeList.ViewInfo.RowsInfo[e.Node].IndentInfo;
+            int x2 = e.Bounds.Left + ii.LevelWidth / 2;
+            int y2 = e.Bounds.Top + e.Bounds.Height / 2;
+            int h2 = e.Bounds.Height / 2 + 1;
+            Rectangle r1 = new Rectangle(e.Bounds.Left, y2, e.Bounds.Width, 1);
+            Rectangle r2 = new Rectangle(x2, y2, 1, h2);
+            Brush brush = _treeList.ViewInfo.RC.TreeLineBrush == null ? Brushes.Transparent : _treeList.ViewInfo.RC.TreeLineBrush;
+            e.Graphics.FillRectangle(brush, r1);
+            if (e.Node.Expanded)
+            {
+                e.Graphics.FillRectangle(brush, r2);
+            }
+            e.Handled = true;
         }
 
         private void treeList_ValidatingEditor(object sender, DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventArgs e)
@@ -144,5 +208,8 @@ namespace winFormsXtraTreeList
                 //throw;
             }
         }
+
+        #endregion [ Private Functionalities ]
+        
     }
 }

@@ -41,6 +41,7 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControl1 = new DevExpress.XtraBars.BarDockControl();
             this.barBtnClearNodes = new DevExpress.XtraBars.BarButtonItem();
+            this.barBtnInfo = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.barDockControl5 = new DevExpress.XtraBars.BarDockControl();
             this.barDockControl4 = new DevExpress.XtraBars.BarDockControl();
@@ -54,7 +55,6 @@
             this.barDockControl11 = new DevExpress.XtraBars.BarDockControl();
             this.popTreeLayer = new DevExpress.XtraBars.PopupMenu(this.components);
             this.popTreeEmpty = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.barBtnInfo = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.treeList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
@@ -84,6 +84,7 @@
             this.treeList.ShowButtonMode = DevExpress.XtraTreeList.ShowButtonModeEnum.Default;
             this.treeList.Size = new System.Drawing.Size(277, 498);
             this.treeList.TabIndex = 2;
+            this.treeList.AfterExpand += new DevExpress.XtraTreeList.NodeEventHandler(this.treeList_AfterExpand);
             this.treeList.AfterCheckNode += new DevExpress.XtraTreeList.NodeEventHandler(this.treeList1_AfterCheckNode);
             this.treeList.ValidatingEditor += new DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventHandler(this.treeList_ValidatingEditor);
             this.treeList.CustomDrawNodeCheckBox += new DevExpress.XtraTreeList.CustomDrawNodeCheckBoxEventHandler(this.treeList1_CustomDrawNodeCheckBox);
@@ -195,6 +196,13 @@
             this.barBtnClearNodes.Name = "barBtnClearNodes";
             this.barBtnClearNodes.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnDeleteAll_ItemClick);
             // 
+            // barBtnInfo
+            // 
+            this.barBtnInfo.Caption = "Info";
+            this.barBtnInfo.Id = 1;
+            this.barBtnInfo.Name = "barBtnInfo";
+            this.barBtnInfo.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnRowInfo_ItemClick);
+            // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
@@ -296,13 +304,6 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barBtnClearNodes)});
             this.popTreeEmpty.Manager = this.barManager;
             this.popTreeEmpty.Name = "popTreeEmpty";
-            // 
-            // barBtnInfo
-            // 
-            this.barBtnInfo.Caption = "Info";
-            this.barBtnInfo.Id = 1;
-            this.barBtnInfo.Name = "barBtnInfo";
-            this.barBtnInfo.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barBtnRowInfo_ItemClick);
             // 
             // frmTreeListX
             // 

@@ -39,7 +39,7 @@ namespace winFormsXtraTreeList.Models
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
-                return false; //Check if the value is the same, dont fire the event.
+                return false; //Check if the value is the same and don't fire change event.
 
             field = value;
             OnPropertyChanged(propertyName);
@@ -51,6 +51,7 @@ namespace winFormsXtraTreeList.Models
         #region [ NodeData Properties ]
 
         private int _id;
+        private bool _checked = true;
         private string _name;
         private TreeListConstants.NodeType? _type = null;
 
@@ -78,9 +79,17 @@ namespace winFormsXtraTreeList.Models
             set { SetField(ref _type, value); }
         }
 
+        public bool IsChecked
+        {
+            get { return _checked; }
+            set { SetField(ref _checked, value); }
+        }
+
         #endregion [ NodeData Properties ]
 
         #region [ Constructor ]
+
+        public NodeData(string _name) : this(-1, _name, null) { }
 
         public NodeData() : this(0,"rootNode", TreeListConstants.NodeType.ROOT) {}
 
@@ -132,6 +141,10 @@ namespace winFormsXtraTreeList.Models
                     return _children.FirstOrDefault(chld => chld.Name == name);
 
                 return null;
+            }
+            set {
+                var tmpIndex = _children.FindIndex(chld => chld.Name == name);
+                _children[tmpIndex] = value;
             }
         }
 
@@ -199,13 +212,11 @@ namespace winFormsXtraTreeList.Models
 
         public void VirtualTreeGetChildNodes(VirtualTreeGetChildNodesInfo info)
         {
-            //throw new NotImplementedException();
             info.Children = _children as List<NodeData>;
         }
 
         public void VirtualTreeGetCellValue(VirtualTreeGetCellValueInfo info)
         {
-            //throw new NotImplementedException();
             info.CellData = info.Node.GetType().GetProperty(info.Column.ToString())?.GetValue(info.Node, null);
         }
 

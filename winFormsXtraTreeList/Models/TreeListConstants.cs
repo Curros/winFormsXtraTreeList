@@ -8,7 +8,6 @@ namespace winFormsXtraTreeList.Models
 {
     class TreeListConstants
     {
-
         public static string PROPERTY_ADD_CHILD = "AddChild";
         public static string PROPERTY_CLEAR_CHILDREN = "ClearChildren";
 
