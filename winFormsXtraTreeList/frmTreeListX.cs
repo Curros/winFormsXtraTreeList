@@ -21,7 +21,7 @@ namespace winFormsXtraTreeList
         {
             _treeListNodes.Add(new NodeData(1, "type Layer", TreeListConstants.NodeType.LAYER));
             _treeListNodes.Add(new NodeData(2, "secondTest Group", TreeListConstants.NodeType.GROUP));
-            _treeListNodes.Add(new NodeData(3, "secondTest Group", TreeListConstants.NodeType.STYLE),1);
+            _treeListNodes.Add(new NodeData(3, "secondTest Style", TreeListConstants.NodeType.GROUP),1);
 
             LoadNodes(treeList);
         }
@@ -78,8 +78,9 @@ namespace winFormsXtraTreeList
         {
             TreeList _treeList = (sender as TreeList);
             _treeList.FocusedNode = e.Node;             //Auto focus after check
-            var tmpNode = _treeListNodes[_treeList.FocusedNode.GetValue("Name").ToString()];
-            tmpNode.IsChecked = _treeList.FocusedNode.Checked;
+
+            var tmpNode = _treeListNodes[e.Node.GetValue("Name")?.ToString()];
+            if (tmpNode != null) { tmpNode.IsChecked = _treeList.FocusedNode.Checked; }
         }
 
         /// <summary>
@@ -93,6 +94,7 @@ namespace winFormsXtraTreeList
 
             //Check type of node to Hide
             TreeListConstants.NodeType? _nodeType = _treeListNodes[e.Node.GetValue("Name")?.ToString()]?.Type;
+
             if (_treeList != null &&
                 _nodeType != TreeListConstants.NodeType.LAYER &&
                 _nodeType != TreeListConstants.NodeType.GROUP)
@@ -108,7 +110,7 @@ namespace winFormsXtraTreeList
         /// <param name="e"></param>
         private void treeList_AfterExpand(object sender, NodeEventArgs e)
         {
-            LoadCheckedNodes(e.Node.Nodes);  //Set childs.
+            LoadCheckedNodes(e.Node.Nodes);  //Set children.
         }
 
         #endregion [ TreeList Events ]

@@ -150,7 +150,7 @@ namespace winFormsXtraTreeList.Models
 
         public int IndexOf(NodeData item)
         {
-            throw new NotImplementedException();
+            return _children.IndexOf(item);
         }
 
         public void Insert(int index, NodeData item)
